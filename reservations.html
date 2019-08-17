@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sizzle's Shitty Ass Reservations</title>
+  <!-- Latest compiled and minified CSS & JS -->
+  <link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="jumbotron text-center">
+      <h1 class="text-center"><span class="fa fa-fire"></span>Sizzle - Seattle's Hottest Restaurant</h1>
+      <h3 class="text-center">Hottest Restaurant in Seattle with the Shittiest Reservation System</h3>
+      <hr>
+      <a href="/"><button class="btn btn-primary btn-lg center-block"><span class="fa fa-spoon"></span> Home</button></a>
+      <a href="/reservations"><button class="btn btn-danger btn-lg center-block"><span class="fa fa-calendar"></span> Make Reservation</button></a>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3><strong>Make Reservation!!</strong></h3>
+          </div>
+          <div class="card-body">
+            <form method="POST" role="form" id="reservationform">
+              <div class="form-group">
+                <label for="name">Name: </label>
+                <input type="text" class="form-control" id="name">
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Phone Number: </label>
+                <input type="text" class="form-control" id="phone">
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email: </label>
+                <input type="text" class="form-control" id="email">
+              </div>
+
+              <div class="form-group">
+                <label for="ID">Unique ID: </label>
+                <input type="text" class="form-control" id="uniqueid">
+              </div>
+
+            </form>
+            <br>
+            <div class="text-left">
+              <button type="submit" class="btn btn-primary btn-md" id="add-reservation"><span class="fa fa-paper-plane"></span> Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $("#add-reservation").on("click", function(event) {
+      event.preventDefault();
+      var reservation = {
+        name: $("#name").val(),
+        phone: $("#phone").val(),
+        email: $("#email").val(),
+        ID: $("#uniqueid").val()
+      }
+      
+      $.post("/api/reservation", reservation)
+        .then(function(data) {
+          console.log("add.html", data);
+        });
+    });
+
+  </script>
+</body>
+
+</html>

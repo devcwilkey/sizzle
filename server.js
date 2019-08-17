@@ -12,31 +12,12 @@ var PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Star Wars Characters (DATA)
+// Reservations Data (DATA)
 // =============================================================
-var characters = [
-  {
-    routeName: "yoda",
-    name: "Yoda",
-    role: "Jedi Master",
-    age: 900,
-    forcePoints: 2000
-  },
-  {
-    routeName: "darthmaul",
-    name: "Darth Maul",
-    role: "Sith Lord",
-    age: 200,
-    forcePoints: 1200
-  },
-  {
-    routeName: "obiwankenobi",
-    name: "Obi Wan Kenobi",
-    role: "Jedi Master",
-    age: 55,
-    forcePoints: 1350
-  }
-];
+var tables = [];
+var waitlist = [];
+var maxTables = 5;
+var maxWaitList = 5;
 
 // Routes
 // =============================================================
@@ -46,13 +27,13 @@ app.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "view.html"));
 });
 
-app.get("/add", function(req, res) {
-  res.sendFile(path.join(__dirname, "add.html"));
+app.get("/tables", function(req, res) {
+  res.sendFile(path.join(__dirname, "tables.html"));
 });
 
 // Displays all characters
-app.get("/api/characters", function(req, res) {
-  return res.json(characters);
+app.get("/reservations", function(req, res) {
+  res.sendFile(path.join(__dirname, "reservations.html"));
 });
 
 // Displays a single character, or returns false
@@ -71,20 +52,45 @@ app.get("/api/characters/:character", function(req, res) {
 });
 
 // Create New Characters - takes in JSON input
-app.post("/api/characters", function(req, res) {
+app.post("/api/reservation", function(req, res) {
   // req.body hosts is equal to the JSON post sent from the user
   // This works because of our body parsing middleware
-  var newCharacter = req.body;
+  
+  var reservation = req.body;
+  console.log(tables.length);
+  if(tables.length === maxTables && waitlist.length === maxWaitList){
+    console.log("Sorry Restaurant is Busy as Fuck and our Table \ WaitList is full");
+  } else {
+    if(tables.length < maxTables){
+      console.log("Adding Reservation to Tables");
+      tables.push(reservation);
+    } else {
+      console.log("We are out of Table Reservations; Checking the WaitList...")
+      if(waitlist.length < maxWaitList){
+        console.log("Adding Reservation to Wait List");
+        waitlist.push(reservation);
+      }
+    }
+  }
+  if(tables.length > 0){
+    console.log("Table Reservations: ");
+    console.log(tables);
+  }
+  if(waitlist.length > 0){
+    console.log("Waitlist Reservations: ");
+    console.log(waitlist);
+  }
+  
 
   // Using a RegEx Pattern to remove spaces from newCharacter
   // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-  newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
+  // newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
 
-  console.log(newCharacter);
+  // console.log(newCharacter);
 
-  characters.push(newCharacter);
+  // characters.push(newCharacter);
 
-  res.json(newCharacter);
+  // res.json(newCharacter);
 });
 
 // Starts the server to begin listening
